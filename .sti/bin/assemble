@@ -90,12 +90,12 @@ copy_artifacts "deployments"
   # Picks up WAR_FILE_URL from buildConfig
   echo ${WAR_FILE_URL}
   
-  if [ -x ${CUSTOM_PROXY_HOST} ]; then
+ # if [ -x ${CUSTOM_PROXY_HOST} ]; then
     echo "doing proxy"
     curl -x ${CUSTOM_PROXY_HOST}:${CUSTOM_PROXY_PORT} -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL}
-  else
-    curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL}
-  fi
+#  else
+#    curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL}
+#  fi
 
 if [ -d $LOCAL_SOURCE_DIR/configuration ]; then
   echo "Copying config files from project..."
