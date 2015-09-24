@@ -1,4 +1,30 @@
 #!/bin/sh
+## The proxy config is for the curl to the war file
+##   "source": {
+##             "type": "Git",
+##             "git": {
+##                "uri": "https://github.com/ivanthelad/openshift-jee-sample.git"
+##            }
+##         },
+##         "strategy": {
+##             "type": "Source",
+##             "sourceStrategy": {
+##                 "from": {
+##                    "kind": "ImageStreamTag",
+##                    "namespace": "openshift",
+##                    "name": "jboss-eap6-openshift:6.4"
+##                 },
+##                 "env": [
+##                     {
+##                         "name": "CUSTOM_PROXY_HOST",
+##                         "value": "http://someurl.com"
+##                    },
+##                     {
+##                         "name": "CUSTOM_PROXY_PORT",
+##                         "value": "heheheh"
+##                     }
+##                ]
+##            }
 
 # Source code provided to STI is at ${HOME}/source
 LOCAL_SOURCE_DIR=${HOME}/source
@@ -63,7 +89,12 @@ copy_artifacts "deployments"
   echo " Veer - Custom code for binary deployment"
   # Picks up WAR_FILE_URL from buildConfig
   echo ${WAR_FILE_URL}
-  curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL}
+  
+  if [ -x ${CUSTOM_PROXY_HOST}]; then
+    curl -x ${CUSTOM_PROXY_HOST}:${CUSTOM_PROXY_PORT} -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL}
+  else
+    curl -o ${DEPLOY_DIR}/ROOT.war -O ${WAR_FILE_URL}
+  fi
 
 if [ -d $LOCAL_SOURCE_DIR/configuration ]; then
   echo "Copying config files from project..."
